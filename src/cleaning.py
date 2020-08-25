@@ -9,7 +9,8 @@ if __name__ == "__main__":
     plt.style.use('ggplot')
     news_df = pd.read_csv('data/fake-news/train.csv')
     fake_df = pd.read_csv('data/Fake.csv')
-
+    true_df = pd.read_csv('data/True.csv')
+    print(fake_df.subject.unique())
     # count_vect = CountVectorizer(lowercase=True, tokenizer=None, stop_words='english', analyzer='word')
     # count_vect.fit(fake_df.text)
     # counts = count_vect.transform(fake_df.text)
@@ -26,18 +27,19 @@ if __name__ == "__main__":
     # print(counts)
     stopwords = set(STOPWORDS)
     stopwords.add('wa')
-    stopwords.add('hi')
+    stopwords.add('hi') 
     stopwords.add('ha')
     stopwords.add('thi')
     stopwords.add('.com')
-
-    word_string=" ".join(fake_df['text'].str.lower())
+    word_string = ''
+    word_string+=" ".join(fake_df['title'].str.lower())
+    word_string+=" ".join(true_df['title'].str.lower())
     cloud = WordCloud(background_color='white',
                           stopwords=stopwords, 
                           random_state=42).generate(word_string)
     # cloud.generate_from_text(fake_df.text)
     fig = plt.figure(1)
-    plt.imshow(cloud)
+    plt.imshow(cloud, interpolation="bilinear")
     plt.axis('off')
     plt.show()
     # print(count_vect.vocabulary_)
