@@ -7,14 +7,14 @@
 ![](img/true_news_wordcloud.png)
 ## TFIDF
 
-Stop words added ``
+Stop words added `'reuters'`
 
 ### Naive Bayes
 --- 
 
-`with n_grams = 1`
+                  with n_grams = 1
 
-0.930
+                    0.930 Accuracy
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -36,9 +36,12 @@ Word Rank | Fake News | True News
  11 | twitter | north
  12 | news | new
 
-`n_grams = 2`
+ ---
 
-.968
+                         n_grams = 2
+
+
+                        0.953 Accuracy
 
 Word Rank | Fake News | True News
 ---------|----------|---------
