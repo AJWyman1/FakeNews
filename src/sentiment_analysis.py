@@ -51,10 +51,10 @@ class sentiment_analysis(object):
     def append_and_save_df(self, df, path, row, analyzer, verbose=False):
         com, neu, pos, neg = self.analyze_df(df, row, analyzer, verbose=verbose)
         # breakpoint()
-        df['com'] = com
-        df['neu'] = neu
-        df['pos'] = pos
-        df['neg'] = neg
+        df['com_title'] = com
+        df['neu_title'] = neu
+        df['pos_title'] = pos
+        df['neg_title'] = neg
 
         df.to_csv(path)
 
@@ -145,8 +145,8 @@ class sentiment_analysis(object):
 if __name__ == "__main__":
     analyzer = SentimentIntensityAnalyzer()
 
-    fake_df = pd.read_csv('data/Fake.csv')
-    true_df = pd.read_csv('data/True.csv')
+    fake_df = pd.read_csv('data/Fake_sentiment.csv')
+    true_df = pd.read_csv('data/True_sentiment.csv')
 
     print(fake_df.shape)
     print(true_df.shape)
@@ -160,5 +160,5 @@ if __name__ == "__main__":
 
     # sa.append_and_save_df(df_test, 'data/test_sentiment.csv', 'col1', analyzer, verbose=True)
 
-    sa.append_and_save_df(fake_df, 'data/Fake_title_sentiment.csv', 'title', analyzer, verbose=True)
-    sa.append_and_save_df(true_df, 'data/True_title_sentiment.csv', 'title', analyzer, verbose=True)
+    sa.append_and_save_df(fake_df, 'data/Fake_title_text_sentiment.csv', 'title', analyzer, verbose=True)
+    sa.append_and_save_df(true_df, 'data/True_title_text_sentiment.csv', 'title', analyzer, verbose=True)

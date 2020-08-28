@@ -18,9 +18,9 @@ np.random.seed(8675309)
 '''
 
 def load_dataframe():
-    fake_df = pd.read_csv('data/Fake_sentiment.csv')
+    fake_df = pd.read_csv('data/Fake_title_text_sentiment.csv')
     fake_df['y'] = np.ones(fake_df.shape[0], dtype='int')
-    true_df = pd.read_csv('data/True_sentiment.csv')
+    true_df = pd.read_csv('data/True_title_text_sentiment.csv')
     true_df['y'] = np.zeros(true_df.shape[0], dtype='int')
     df = pd.concat([fake_df, true_df])
 
@@ -38,14 +38,14 @@ def print_feature_ranking():
         print(f"{f + 1}. feature {feature_words[indices[f]]} ({importances[indices[f]]})")
 
 def sentiment_analysis_rf(df):
-    sentiment_corpus = df[['com', 'neu', 'pos', 'neg', 'y']]
-    X_sent = sentiment_corpus[['com', 'neu', 'pos', 'neg']]
+    sentiment_corpus = df[['com', 'neu', 'pos', 'neg','com_title', 'neu_title', 'pos_title', 'neg_title', 'y']]
+    X_sent = sentiment_corpus[['com', 'neu', 'pos', 'neg', 'com_title', 'neu_title', 'pos_title', 'neg_title']]
     y_sent = sentiment_corpus.y
     X_train_sent, X_test_sent, y_train_sent, y_test_sent = train_test_split(X_sent, y_sent)
 
     rf_class = RandomForestClassifier()
     rf_class.fit(X_train_sent, y_train_sent)
-    print(rf_class.score(X_test_sent, y_test_sent))
+    print(f'Sentiment Analysis Acc = {rf_class.score(X_test_sent, y_test_sent)}')
 
 
 if __name__ == "__main__":
