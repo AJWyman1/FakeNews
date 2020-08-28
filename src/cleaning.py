@@ -21,7 +21,8 @@ if __name__ == "__main__":
 
     # # nb_model = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
     # # nb_model.fit(X_tfidf, fake_df.text)
-    
+    md = true_df.head(2)
+    print(md.to_markdown())
     # feature_words = count_vect.get_feature_names()
     n = 7 #number of top words associated with the category that we wish to see
     # print(counts)

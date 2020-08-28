@@ -1,6 +1,6 @@
 # Detecting Fake News
 
-
+![](img/news.png)
 
 ### INTRO
 
@@ -9,7 +9,7 @@
 
 ### **Raw Data**
 [The dataset](https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset) was sourced from Kaggle. It comes in two separate csv files one containing Fake news articles and the other with true news articles both 
-Dataset came in two separate `csv` files one containing only fake news and the other with true news. With ~20,000 articles in each csv the dataset was evenly split.
+Dataset came in two separate `csv` files one containing only fake news and the other with true news. With ~20,000 articles in each csv the dataset was evenly split. Because of this even split I will be using accuracy as my scoring metric.
 
 ## **Fake News**
 
@@ -38,16 +38,33 @@ Dataset came in two separate `csv` files one containing only fake news and the o
 
 ## Exploring the text with VADER sentiment analysis 
 
-Starting off I explored using VADER sentiment analysis to derive features for my model to train on. VADER is a lexicon and rule-based sentiment analysis tool, which when given text outputs four different scores `compound`,  `positivity`,  `negativity`, and `neutrality`
+Starting off I explored using VADER sentiment analysis to derive features for my model to train on. VADER is a lexicon and rule-based sentiment analysis tool, which when given text outputs four different scores `compound`,  `positivity`,  `negativity`, and `neutrality`. I expected that True news would score higher on neutrality because news reports should be unbiased 
+
+![](img/all_four_with_zeros.png)
+
+Performing sentiment analysis on the full text yields some interesting results! True news scores a -1 compound score far less than Fake news and the neutrality score is higher on average!
+
+## First Model
+
+Training a `RandomForestClassifier` on only the sentiment scores for the full text of the article produces an Accuracy score of .692! This is above what we would expect from just random guessing.
+
+## **Sentiment analysis of Titles**
+
 
 
 ![](img/all_four.png)
 
-Its a little hard to see the distribution with large spikes at the zero mark. However, 
+Its a little hard to see the distribution with large spikes at the zero mark. However, there are far more True news articles that have a compound score of 0 and also scores higher on neutrality as anticipated. Also when graded on negativity fake news scores higher on average with a lot fewer articles scoring zero.
 
 Removing Zeros:
 
 ![](img/all_four_no_zeros.png)
+
+With the large spikes removed it is easier to see the underlying distributions 
+
+## Second Model
+
+Again training a `RandomForestClassifier` but this time on the sentiment scores of just the article's title
 
 ## TFIDF
 

@@ -8,6 +8,14 @@ import sys
 
 plt.style.use('ggplot')
 
+def demo_vader(sentence):
+    '''
+    Demo VADER sentiment analysis
+    '''
+    analyzer = SentimentIntensityAnalyzer()
+    score = analyzer.polarity_scores(sentence)
+    print("{:-<40} {}".format(sentence, str(score)))
+
 class sentiment_analysis(object):
 
     def __init__(self, fake_df, true_df, is_vader=True):
@@ -148,9 +156,9 @@ if __name__ == "__main__":
     subjects = ['News', 'politics', 'Government News', 'left-news', 'US_News', 'Middle-east']
     
 
-    sa.analyze_and_plot('text', analyzer, verbose=True)
+    # sa.analyze_and_plot('text', analyzer, verbose=True)
 
     # sa.append_and_save_df(df_test, 'data/test_sentiment.csv', 'col1', analyzer, verbose=True)
 
-    # sa.append_and_save_df(fake_df, 'data/Fake_sentiment.csv', 'text', analyzer, verbose=True)
-    # sa.append_and_save_df(true_df, 'data/True_sentiment.csv', 'text', analyzer, verbose=True)
+    sa.append_and_save_df(fake_df, 'data/Fake_title_sentiment.csv', 'title', analyzer, verbose=True)
+    sa.append_and_save_df(true_df, 'data/True_title_sentiment.csv', 'title', analyzer, verbose=True)

@@ -22,7 +22,7 @@ def load_dataframe():
     fake_df['y'] = np.ones(fake_df.shape[0], dtype='int')
     true_df = pd.read_csv('data/True_sentiment.csv')
     true_df['y'] = np.zeros(true_df.shape[0], dtype='int')
-
+    print(fake_df.shape[0] / (true_df.shape[0] +fake_df.shape[0]))
     df = pd.concat([fake_df, true_df])
 
     return df
@@ -38,19 +38,29 @@ def print_feature_ranking():
     for f in range(n):
         print(f"{f + 1}. feature {feature_words[indices[f]]} ({importances[indices[f]]})")
 
+def sentiment_analysis_rf(df):
+    sentiment_corpus = df[['com', 'neu', 'pos', 'neg', 'y']]
+    X_sent = sentiment_corpus[['com', 'neu', 'pos', 'neg']]
+    y_sent = sentiment_corpus.y
+    X_train_sent, X_test_sent, y_train_sent, y_test_sent = train_test_split(X_sent, y_sent)
+
+    rf_class = RandomForestClassifier()
+    rf_class.fit(X_train_sent, y_train_sent)
+    print(rf_class.score(X_test_sent, y_test_sent))
 
 
 if __name__ == "__main__":
 
-    my_stop_words = text.ENGLISH_STOP_WORDS.union(['reuters', 'com', 'pic'])
+    my_stop_words = text.ENGLISH_STOP_WORDS.union(['said', '21st', 'century', 'wire', 'reuters','21wire', 'www', 'https', 'com', 'pic'])
     
     naive = MultinomialNB()
 
-    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words)
+    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words, ngram_range=(2,2)) 
     count_vect = CountVectorizer(lowercase=True, stop_words=my_stop_words)
 
     df = load_dataframe()
     
+    sentiment_analysis_rf(df)
 
     corpus = df[['text', 'y']]
     X = corpus.text
@@ -134,14 +144,6 @@ if __name__ == "__main__":
 
     # print(feature_words)
 
-    sentiment_corpus = df[['com', 'neu', 'pos', 'neg', 'y']]
-
-    X_sent = sentiment_corpus[['com', 'neu', 'pos', 'neg']]
-    y_sent = sentiment_corpus.y
-    X_train_sent, X_test_sent, y_train_sent, y_test_sent = train_test_split(X_sent, y_sent)
-
-    rf_class = RandomForestClassifier()
-    rf_class.fit(X_train_sent, y_train_sent)
-    print(rf_class.score(X_test_sent, y_test_sent))
+    
 
 
