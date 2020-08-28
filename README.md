@@ -190,5 +190,7 @@ There are trends that appear in both fake and true news that make them distingui
 
  I would like to explore this dataset further and perform topic modeling to see what topics do both Fake and Real news talk about.
 
- I also would like to explore how well a quadra-gram (_groups of four words_) would perform
+ I also would like to explore how well a quadra-gram (_groups of four words_) would perform and what effect changing the threshold.
+ 
+ I feel as though this dataset could be cleaned more and that dataleakage may have been the culprit for such high accuracies so further cleaning may be necessary.
 
