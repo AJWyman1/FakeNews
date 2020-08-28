@@ -8,8 +8,7 @@
 
 
 ### **Raw Data**
-[The dataset](https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset) was sourced from Kaggle. It comes in two separate csv files one containing Fake news articles and the other with true news articles both 
-Dataset came in two separate `csv` files one containing only fake news and the other with true news. With ~20,000 articles in each csv the dataset was evenly split. Because of this even split I will be using accuracy as my scoring metric.
+[The dataset](https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset) was sourced from Kaggle. It comes in two separate csv files one containing Fake news articles and the other with True news articles both with ~20,000 articles the dataset was evenly split at 51/49. Because of this even split I will be using accuracy as my scoring metric.
 
 ## **Fake News**
 
@@ -30,7 +29,7 @@ Dataset came in two separate `csv` files one containing only fake news and the o
 
 ## Word Clouds & EDA
 ---
-
+Staring with word clouds
 ### Fake news word cloud from title
 ![](img/fake_news_wordcloud.png)
 ### True news word cloud from title
@@ -56,25 +55,29 @@ Training a `RandomForestClassifier` on only the sentiment scores for the full te
 
 Its a little hard to see the distribution with large spikes at the zero mark. However, there are far more True news articles that have a compound score of 0 and also scores higher on neutrality as anticipated. Also when graded on negativity fake news scores higher on average with a lot fewer articles scoring zero.
 
-Removing Zeros:
+**Removing Zeros:**
 
 ![](img/all_four_no_zeros.png)
 
-With the large spikes removed it is easier to see the underlying distributions 
+With the large spikes removed it is easier to see the underlying distributions such as Fake news with far more compound scores in the negative, True news still with higher Neutrality scores and scoring slightly more positive and less non-zero negative scores.
 
 ## Second Model
 
-Again training a `RandomForestClassifier` but this time on the sentiment scores of just the article's title
+Again training a `RandomForestClassifier` but this time on the sentiment scores of just the article's title results in an impressive .763!
 
-## TFIDF
+## **TfidfVectorizer**
 
-Stop words added 
+Stop words added:
 `'reuters' '21st', 'century', 'wire', '21wire', 'www', 'https', 'com', 'pic'`
+
+I chose these atop words to add because they were either part of links embedded into the article or a source of data leakage.
+
+With the stop words out of the way it was time to vectorize my corpus. TF-IDF 
 
 ## **Naive Bayes**
 --- 
 
-**0.930 Accuracy**
+Training a Naive Bayes model of the vectorized tf-idf and returning the top 12 features from the model we can see some interesting trends. Four out of the top six features for Fake news are people's names (Trump, Clinton, Obama, Hillary) while True news seems to larger groups of people (state, house, government)
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -91,14 +94,19 @@ Word Rank | Fake News | True News
  11 | twitter | north
  12 | news | new
 
+The Naive Bayes model performed surprisingly well with:
+
+
+**0.930 Accuracy**
+
 ---
 ---
-### **Bi-grams**
+### **Bi-grams** (_two words_)
 ---
 ---
 
+Changing the model's hyper-parameters and looking at groups of two words together 
 
-**0.953 Accuracy**
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -115,14 +123,16 @@ Word Rank | Fake News | True News
  11 | year old| New York
  12 |youtube watch| Washington President
 
+**0.953 Accuracy**
+
 ---
 ---
 ---
-### **Tri-Grams**
+### **Tri-Grams** (_three sequential words_)
 ---
 ---
 ---
-**0.971 Accuracy**
+
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -132,11 +142,6 @@ Word Rank | Fake News | True News
  4 | president United States | white house said
  5 | featured image video | president elect Donald 
  6 | video screen capture | elect Donald Trump
-
-
-
-Word Rank | Fake News | True News
----------|----------|---------
  7 | image video screen | President Vladimir Putin
  8 | President Barack Obama | Prime Minister Theresa
  9 | featured image screenshot | state Rex Tillerson
@@ -144,10 +149,14 @@ Word Rank | Fake News | True News
  11 | New York City | Donald Trump said
  12 | image screen capture | Russian President Vladimir
 
+**0.971 Accuracy**
+
+
 ### **Random Forest**
 ---
 
-                    0.979 Accuracy
+
+**0.979 Accuracy**
 
  | Feature      | Feature Importances
 ----------------|-----------------
@@ -156,3 +165,10 @@ Word Rank | Fake News | True News
  | featured     | .010
  | image        | 0.010
  | minister     | 0.007
+
+
+ # Further work
+
+ I would like to explore this dataset further and perform topic modeling to see what topics do both Fake and Real news talk about.
+
+ I also would like to explore how well a quadra-gram (_groups of four words_) would perform

@@ -22,7 +22,6 @@ def load_dataframe():
     fake_df['y'] = np.ones(fake_df.shape[0], dtype='int')
     true_df = pd.read_csv('data/True_sentiment.csv')
     true_df['y'] = np.zeros(true_df.shape[0], dtype='int')
-    print(fake_df.shape[0] / (true_df.shape[0] +fake_df.shape[0]))
     df = pd.concat([fake_df, true_df])
 
     return df
@@ -55,7 +54,7 @@ if __name__ == "__main__":
     
     naive = MultinomialNB()
 
-    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words, ngram_range=(2,2)) 
+    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words,smooth_idf=False ,ngram_range=(2,3)) 
     count_vect = CountVectorizer(lowercase=True, stop_words=my_stop_words)
 
     df = load_dataframe()
@@ -109,17 +108,17 @@ if __name__ == "__main__":
     rando_forest = RandomForestClassifier()
     rando_forest.fit(X_train_tfidf, y_train)
     print(f'Random Forest acc: {rando_forest.score(X_test_tfidf, y_test)}')
-#     titles_options = [("Confusion matrix, without normalization", None),
-#                   ("Normalized confusion matrix", 'true')]
-#     for title, normalize in titles_options:
-#         disp = plot_confusion_matrix(rando_forest, X_test_counts, y_test,
-#                                     normalize=normalize)
-#         disp.ax_.set_title(title)
+    titles_options = [("Confusion matrix, without normalization", None),
+                  ("Normalized confusion matrix", 'true')]
+    for title, normalize in titles_options:
+        disp = plot_confusion_matrix(rando_forest, X_test_tfidf, y_test,
+                                    normalize=normalize)
+        disp.ax_.set_title(title)
 
-#         print(title)
-#         print(disp.confusion_matrix)
+        print(title)
+        print(disp.confusion_matrix)
 
-#   plt.show()
+    plt.show()
 
     importances = rando_forest.feature_importances_
 
