@@ -2,13 +2,15 @@
 
 ![](img/news.png)
 
-### INTRO
+## The Problem
+
+Fake news is the intentional spread of misinformation it has been in our society since the days of the printing press. Technology such as social media and news writing bots have increased both the spread and the amount of intentionally misleading articles. Being able to detect if an article is genuine or not is a difficult task for many of my Facebook friends, maybe machine learning and NLP will be able to help.
 
 
-
+![Reporters with various forms of "fake news" from an 1894 illustration by Frederick Burr Opper](img/humbug_news.jpg)
 
 ### **Raw Data**
-[The dataset](https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset) was sourced from Kaggle. It comes in two separate csv files one containing Fake news articles and the other with True news articles both with ~20,000 articles the dataset was evenly split at 51/49. Because of this even split I will be using accuracy as my scoring metric.
+[The dataset](https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset) was sourced from Kaggle. It comes in two separate csv files one containing Fake news articles and the other with True news articles both with ~20,000 articles the dataset was fairly evenly split at 51/49. Because of this even split I will be using accuracy as my scoring metric.
 
 ## **Fake News**
 
@@ -45,7 +47,7 @@ Performing sentiment analysis on the full text yields some interesting results! 
 
 ## First Model
 
-Training a `RandomForestClassifier` on only the sentiment scores for the full text of the article produces an Accuracy score of .692! This is above what we would expect from just random guessing.
+Training a `RandomForestClassifier` on only the sentiment scores for the full text of the article produces an Accuracy score of **.692**! This is above what we would expect from just random guessing.
 
 ## **Sentiment analysis of Titles**
 
@@ -63,21 +65,29 @@ With the large spikes removed it is easier to see the underlying distributions s
 
 ## Second Model
 
-Again training a `RandomForestClassifier` but this time on the sentiment scores of just the article's title results in an impressive .763!
+Again training a `RandomForestClassifier` but this time on the sentiment scores of just the article's title results in an impressive **.763 accuracy**!
+
+Combining both sentiment of the title and full text of the article produces a **.801 accuracy**!!!
+
+# NLP
+
+Training models on just the sentiment analysis of the articles is clearly effective but in doing so we throw out the largest source of data in the corpus; the actual words. 
 
 ## **TfidfVectorizer**
+
+Using tf-idf we can change from words to numbers I chose this because it offers more information on how often a word is used not just in a single document but also how unique it is to the rest of the documents in the corpus
 
 Stop words added:
 `'reuters' '21st', 'century', 'wire', '21wire', 'www', 'https', 'com', 'pic'`
 
-I chose these atop words to add because they were either part of links embedded into the article or a source of data leakage.
+I chose these stop words because they were either part of links embedded into the article or a source of data leakage.
 
-With the stop words out of the way it was time to vectorize my corpus. TF-IDF 
+With the stop words out of the way it was time to vectorize the corpus.
 
 ## **Naive Bayes**
 --- 
 
-Training a Naive Bayes model of the vectorized tf-idf and returning the top 12 features from the model we can see some interesting trends. Four out of the top six features for Fake news are people's names (Trump, Clinton, Obama, Hillary) while True news seems to larger groups of people (state, house, government)
+Training a Naive Bayes model of the vectorized tf-idf and returning the top 12 features from the model we can see some interesting trends. Four out of the top six features for Fake news are people's names (Trump, Clinton, Obama, Hillary) while True news seems to larger groups of people (state, house, government). 
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -105,7 +115,7 @@ The Naive Bayes model performed surprisingly well with:
 ---
 ---
 
-Changing the model's hyper-parameters and looking at groups of two words together 
+Changing the model's hyper-parameters and looking at groups of two words together people's full names appear. We can also see that True news has far more credible sources such as actual statements and quotes while Fake news focuses on images and youtube for their sources.
 
 
 Word Rank | Fake News | True News
@@ -133,6 +143,7 @@ Word Rank | Fake News | True News
 ---
 ---
 
+Exploring tri-grams we see an interesting shift with True News featuring far more people's names than Fake news which is again relying on screenshots, videos and at the top of the list a twitter handle. 
 
 Word Rank | Fake News | True News
 ---------|----------|---------
@@ -154,9 +165,9 @@ Word Rank | Fake News | True News
 
 ### **Random Forest**
 ---
+Exploring a random forest using `n-gram = 1` we see 'said' as the most important feature when determining Fake or Real
 
 
-**0.979 Accuracy**
 
  | Feature      | Feature Importances
 ----------------|-----------------
@@ -167,8 +178,17 @@ Word Rank | Fake News | True News
  | minister     | 0.007
 
 
+This RandomForest produced an incredible  
+**0.979 Accuracy**
+
+# Conclusion
+
+There are trends that appear in both fake and true news that make them distinguishable from each other  with fake news relying on twitter, images and videos far more often than actual news. While true news relies far more on facts and actual statements. Fake news only exists to divide us as people.
+
+
  # Further work
 
  I would like to explore this dataset further and perform topic modeling to see what topics do both Fake and Real news talk about.
 
  I also would like to explore how well a quadra-gram (_groups of four words_) would perform
+
