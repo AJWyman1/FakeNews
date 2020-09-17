@@ -8,6 +8,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction import text
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.svm import LinearSVC, SVC
+import pickle as pickle
+
 
 np.random.seed(8675309)
 
@@ -50,11 +52,11 @@ def sentiment_analysis_rf(df):
 
 if __name__ == "__main__":
 
-    my_stop_words = text.ENGLISH_STOP_WORDS.union(['said', '21st', 'century', 'wire', 'reuters','21wire', 'www', 'https', 'com', 'pic'])
+    my_stop_words = text.ENGLISH_STOP_WORDS.union(['ted','cruz','mitch', 'mcconnell','trump','paul', 'ryan', 'obama', 'barack','hillary', 'clinton','angela','bernie', 'sanders',  'hannity','boiler', 'donald','hilary' 'said', '21st', 'century', 'wire', 'patrick', 'henningsen','getty','featured', 'image','john', 'mccain','tillerson','merkel', 'reuters','21wire','vladimir', 'putin','james','comey', 'rex', 'www','george', 'bush' 'https', 'com', 'pic', '2017','00', '000', 'said', 'president', 'house', 'state', 'republican', 'states', 'new', 'party', 'election', 'year', 'white', 'people', 'law', 'campaign', 'vote', 'country', 'republicans', 'united' ])
     
     naive = MultinomialNB()
 
-    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words,smooth_idf=False ,ngram_range=(2,3)) 
+    vectorizer = TfidfVectorizer(use_idf=True, stop_words=my_stop_words ,ngram_range=(1,1)) 
     count_vect = CountVectorizer(lowercase=True, stop_words=my_stop_words)
 
     df = load_dataframe()
@@ -75,7 +77,8 @@ if __name__ == "__main__":
     X_train_tfidf = vectorizer.transform(X_train)
     X_test_tfidf = vectorizer.transform(X_test)
 
-    print(type(X_train_tfidf))
+    with open('my_app/static/vectorizer11.pkl', 'wb') as f:
+        pickle.dump(vectorizer, f)
 
 
     print("Start of model training")
@@ -85,13 +88,11 @@ if __name__ == "__main__":
     nb_model.fit(X_train_tfidf, y_train)
     print(f'naive bayes acc:{nb_model.score(X_test_tfidf, y_test)}')
 
+    with open('my_app/static/model11.pkl', 'wb') as f:
+        pickle.dump(nb_model, f)
 
-    lin_clf = LinearSVC()
-    lin_clf.fit(X_train_tfidf, y_train)
-    print(f'Lin SVC acc: {lin_clf.score(X_test_tfidf, y_test)}')
-    
 
-    n = 25
+    n = 150
 
     feature_words = vectorizer.get_feature_names()
     log_prob_fake = nb_model.feature_log_prob_[1]
@@ -105,30 +106,30 @@ if __name__ == "__main__":
     print(f"Top {n} tokens: ", features_topn_true)
 
 
-    rando_forest = RandomForestClassifier()
-    rando_forest.fit(X_train_tfidf, y_train)
-    print(f'Random Forest acc: {rando_forest.score(X_test_tfidf, y_test)}')
-    titles_options = [("Confusion matrix, without normalization", None),
-                  ("Normalized confusion matrix", 'true')]
-    for title, normalize in titles_options:
-        disp = plot_confusion_matrix(rando_forest, X_test_tfidf, y_test,
-                                    normalize=normalize)
-        disp.ax_.set_title(title)
+    # rando_forest = RandomForestClassifier()
+    # rando_forest.fit(X_train_tfidf, y_train)
+    # print(f'Random Forest acc: {rando_forest.score(X_test_tfidf, y_test)}')
+    # titles_options = [("Confusion matrix, without normalization", None),
+    #               ("Normalized confusion matrix", 'true')]
+    # for title, normalize in titles_options:
+    #     disp = plot_confusion_matrix(rando_forest, X_test_tfidf, y_test,
+    #                                 normalize=normalize)
+    #     disp.ax_.set_title(title)
 
-        print(title)
-        print(disp.confusion_matrix)
+    #     print(title)
+    #     print(disp.confusion_matrix)
 
-    plt.show()
+    # plt.show()
 
-    importances = rando_forest.feature_importances_
+    # importances = rando_forest.feature_importances_
 
-    indices = np.argsort(importances)[::-1]
+    # indices = np.argsort(importances)[::-1]
 
-    # Print the feature ranking
-    print("Feature ranking:")
+    # # Print the feature ranking
+    # print("Feature ranking:")
 
-    for f in range(n):
-        print(f"{f + 1}. feature {feature_words[indices[f]]} ({importances[indices[f]]})")
+    # for f in range(n):
+    #     print(f"{f + 1}. feature {feature_words[indices[f]]} ({importances[indices[f]]})")
 
 
 
