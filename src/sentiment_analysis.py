@@ -58,6 +58,14 @@ class sentiment_analysis(object):
 
         df.to_csv(path)
 
+    def blob_blob(self, df):
+        blob = TextBlob
+        
+        df['polarity'] = df.apply(lambda row: TextBlob(row['text']).sentiment.polarity, axis=1)
+        df['subjectivity'] = df.apply(lambda row: TextBlob(row['title']).sentiment.subjectivity, axis=1)
+
+        return df
+
     def analyze_df(self, df, row, analyzer, verbose=False):
         com = []
         neu = []
@@ -154,11 +162,17 @@ if __name__ == "__main__":
     sa = sentiment_analysis(fake_df, true_df)
 
     subjects = ['News', 'politics', 'Government News', 'left-news', 'US_News', 'Middle-east']
+
+    fake_df = sa.blob_blob(fake_df)
+    true_df = sa.blob_blob(true_df)
+
+    print(fake_df.describe())
+    print(true_df.describe())
     
 
     # sa.analyze_and_plot('text', analyzer, verbose=True)
 
-    # sa.append_and_save_df(df_test, 'data/test_sentiment.csv', 'col1', analyzer, verbose=True)
+    # # sa.append_and_save_df(df_test, 'data/test_sentiment.csv', 'col1', analyzer, verbose=True)
 
-    sa.append_and_save_df(fake_df, 'data/Fake_title_text_sentiment.csv', 'title', analyzer, verbose=True)
-    sa.append_and_save_df(true_df, 'data/True_title_text_sentiment.csv', 'title', analyzer, verbose=True)
+    # sa.append_and_save_df(fake_df, 'data/Fake_title_text_sentiment.csv', 'title', analyzer, verbose=True)
+    # sa.append_and_save_df(true_df, 'data/True_title_text_sentiment.csv', 'title', analyzer, verbose=True)

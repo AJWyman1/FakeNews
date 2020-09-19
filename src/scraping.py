@@ -8,25 +8,18 @@ class scraper():
     def __init__(self):
         pass
 
-    def tag_visible(self, element):
-            if element.parent.name in ['style','svg','g','link','button','section', 'cite', 'span', 'script', 'head', 'title', 'meta', '[document]']:
-                return False
-            if isinstance(element, Comment):
-                return False
-            if element.parent.name == 'h1':
-                print(f'Title? {element}')
-            print(element.parent.name)
+    def tag_visible(element):
+        if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
+            return False
+        if isinstance(element, Comment):
+            return False
+        return True
 
-            return True
-
-    def text_from_html(self, body):
+    def text_from_html(body):
         soup = BeautifulSoup(body, 'html.parser')
-        # print(soup.get_text())
         texts = soup.findAll(text=True)
-        visible_texts = filter(self.tag_visible, texts)  
-        # print((texts))
-        return u" \n".join(t.strip() for t in visible_texts)
-
+        visible_texts = filter(tag_visible, texts)  
+        return u" ".join(t.strip() for t in visible_texts)
     def abc_article(self, html):
         '''
         input: response html from abc
@@ -68,16 +61,20 @@ if __name__ == "__main__":
     url_a2 = "https://abcnews.go.com/US/settlement-reached-fatal-kentucky-police-shooting-breonna-taylor/story?id=73019106&cid=clicksource_4380645_1_heads_hero_live_hero_hed"
     url_d2 = "https://www.dailywire.com/news/violent-riots-looting-hit-pennsylvania-after-cop-shoots-black-man-suspect-charged-at-cop-with-knife-video-shows"
     url_ny = "https://www.nytimes.com/2020/09/15/books/booker-prize-shortlist.html"
-    url_b = "https://www.breitbart.com/faith/2020/09/15/left-wing-priests-organization-slams-prayer-breakfast-for-honoring-ag-william-barr/"
+    url_b = "https://www.breitbart.com/politics/2020/09/17/soros-backed-coalition-preparing-for-post-election-day-chaos-were-going-to-fight-like-hell/"
+    url_d3 = "https://www.dailywire.com/news/biden-blasted-for-beyond-patronizing-incident-trying-to-appeal-to-latinos-by-playing-spanish-sex-song"
+    reut = "https://www.reuters.com/article/us-health-coronavirus-usa-farmers-aid/u-s-details-up-to-14-billion-in-new-aid-for-farmers-idUSKBN269261"
     r  = requests.get(url_b)
     response_html = r.text
 
     s = scraper()
-    # text = s.daily_wire(response_html)
-    # print(text)
+    text = s.bbart_article(response_html)
+    print(text)
     text = s.text_from_html(response_html)
 
-    print(s.bbart_article(response_html))
+    # print(s.bbart_article(response_html))
+
+    # print(text)
 
     # print(text)
 
